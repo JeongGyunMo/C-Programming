@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>	//strcpy()
+
+struct score {		
+	int num;
+	char name[10];
+	int sc1;
+	int sc2;
+};
+typedef struct score score;
+
+struct sclist
+{
+	score *psc;
+	struct sclist *next;
+};
+typedef struct sclist sclist;
+typedef sclist *pscl;
+
+pscl put_struct(score *);
+pscl add_list(pscl, pscl);
+int prt(pscl);
+
+int main()
+{
+	score sc;
+	score *asc = &sc;
+	FILE *fp;
+	char fn[]= "input.txt";
+	pscl head = NULL;
+	pscl cur;
+
+	if((fp = fopen(fn,"r")) == NULL) {
+		printf("can't open the file.\n");
+		exit(1);
+	}
+	fprintf(stdout, "=== file read ===\n");
+	while(!feof(fp)) {
+	
+	fscanf(fp, "%9d%9s%9d%9d\n", &asc->num, asc->name, &asc->sc1, &asc->sc2);
+	cur = put_struct(asc);
+	head = add_list(head,cur);
+	}
+	fclose(fp);
+	prt(head);
+
+	return 0;
+}
+
+pscl put_struct(score *asc){
+	pscl cur;
+	cur=(sclist*) malloc(sizeof(sclist));
+	cur->psc = (score*)malloc(sizeof(score));
+
+	strcpy(cur->psc->name , asc->name);
+	cur->psc->num = asc->num;
+	cur->psc->sc1 = asc->sc1;
+	cur->psc->sc2 = asc->sc2;
+	cur->next = NULL;
+
+	return cur;
+}
+
+pscl add_list(pscl head, pscl cur){
+	pscl p=head;
+
+	if(head == NULL){
+
+		head = cur;
+		return head;
+	}
+
+
+	while(p->next != NULL){
+		p = p->next;
+	}
+	p->next = cur;
+	
+	return head;
+}
+
+int prt(pscl head){
+	pscl p = head;
+
+ 	while(p != NULL) {
+		fprintf(stdout, "%9d%9s%9d%9d%9d\n", p->psc->num, p->psc->name, p->psc->sc1, p->psc->sc2,  p->psc->sc1+p->psc->sc2);
+		getchar();
+		p = p->next;
+    }
+	return 0;
+}

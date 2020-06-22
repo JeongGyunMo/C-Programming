@@ -1,0 +1,138 @@
+1. 컴퓨터가 rand()를 사용하여 저장한 수(1~20)를 맞추는 프로그램 작성.
+
+#include <stdio.h>
+#include <stdlib.h> //rand(), srand()를 위한 헤더 파일 포함  
+#include <time.h>   //time()을 위한 헤더 파일 포함  
+#define MAX 20
+int genRanNum();
+int getNum();
+int isExceedCount(int count);
+int isRight(int i,int number);
+
+void main(void) {
+	int i, number,count=0; 
+		number = genRanNum();
+		do{
+			i=getNum();
+			if(isRight(i,number)){
+				printf("정답입니다.\n");
+				number = genRanNum();
+				count = 0;
+			}else{
+				printf("틀렸습니다.\n");
+			}
+		}while(isExceedCount(count++));
+}
+int genRanNum(){
+	int num;
+	srand((long) time(NULL));
+	num=rand()%MAX + 1;
+	printf("컴퓨터가 저장한 수:%d\n",num);
+	return num;
+}
+int getNum(){
+	int value;
+	printf("숫자를 입력하세요: ");
+	scanf("%d",&value);
+	return value;
+}
+int isExceedCount(int count){
+	if(count >=5){
+		printf("맞힐 기회을 전부 사용하셨습니다.\n");
+		return 0;
+	}else{
+		printf("남은 기회 %d 남았습니다\n",5-count);
+		return 1;
+	}
+}
+int isRight(int i,int number){
+	if(i==number){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+2. 다음을 참고로 피보나츠 수를 구하는 함수를 재귀함수로 작성하여 처음부터 입력 받은 수 번째의 피보나츠 수에 대하여 각각의 함수 결과를 모두 출력하는 프로그램 작성.
+#include <stdio.h>
+int fibo(int);
+
+void main(void) {
+	int count, input;
+
+	printf("n 번째의 피보나츠 수 (n입력) : "); 
+	scanf("%d", &input);
+
+	printf("피보나츠수를 처음부터 %d번째 까지출력.\n\n", input);
+	for (count = 0; count <= input; count++)
+	printf("%5d번째 피보나츠수 = %6d\n", count, fibo(count));
+}
+int fibo(int fn)
+{
+	if(fn<=0){
+		return 0;
+	}else if(fn==1){
+		return 1;
+	}
+	else{return fibo(fn-1)+fibo(fn-2);
+	}
+}
+3. 재귀함수를 이용하여 입력 받은 정수를 16진수로 출력하는 작업을 반복하는 프로그램 작성.
+ 단 0을 입력하면 프로그램 종료.
+#include <stdio.h>
+#include <stdlib.h>
+void tohex(int num);
+int getNum();
+void main(void)
+{
+	while(1){
+	tohex(getNum());
+	printf("\n");
+	}
+}
+void tohex(int num){
+	int value;
+	if(num!=0){
+		if(num>16){
+			value= num/16;
+			tohex(value);
+		}
+		if(num%16<10){
+			printf("%d",num%16);
+		}else{
+			printf("%c",'A'+(num%16-10));
+		}
+	}else{
+		printf("종료합니다.");
+		exit(1);
+	}
+}
+int getNum(){
+	int value;
+	printf("숫자를 입력하세요(0을 입력하면 종료합니다.): ");
+	scanf("%d",&value);
+	return value;
+}
+
+4. 다음은 두 수의 최대공약수(Greatest Common Devisor)를 구하는 해결 방법 중의 하나인 유클리드 호제법(Euclidean algorithm)이다.
+ 이 내용을 참고로 두 수의 최대공약수를 구하는 gcd() 함수를 구현하고, 두 양의 정수를 입력 받아 gcd() 호출 결과를 출력하는 프로그램을 작성하시오.
+#include <stdio.h>
+int gcd(int, int);
+
+void main(void)
+{ 
+	int a, b; 
+
+	printf("두 정수를 입력하면 최대공약수를 구합니다.\n"); 
+	printf("두 정수입력 (숫자,숫자) : ");
+	scanf("%d%*c%d", &a, &b); 
+
+	printf("\n%d와 %d의 최대공약수는 %d \n", a, b, gcd(a, b)); 
+}
+int gcd(int a, int b){
+	if(a%b==0){
+		return b;
+	}else{
+		return gcd(b,a%b);
+	}
+}

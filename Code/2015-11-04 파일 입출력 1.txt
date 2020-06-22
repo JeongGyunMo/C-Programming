@@ -1,0 +1,161 @@
+
+//1, 2, 3, 4, 5, 6, 7, 8
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <ctype.h>
+#include <string.h>
+void mycopy(char *argv[]);
+void isequal(char *argv[]);
+
+
+void ex05(int argc,char *argv[]){
+	FILE *fp,*fq;
+	char print[50];
+
+	if(fopen_s(&fp ,argv[1],"w")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	printf("내용을 입력하세요(종료하려면 ctrl + Z를 입력하세요)\n");
+	fgets(print, 50, stdin);
+	while(!feof(stdin)){
+		fputs(print, fp);
+		fgets(print, 50, stdin);
+	}
+	fclose(fp);
+
+	if(fopen_s(&fq ,argv[2],"w")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	printf("내용을 입력하세요(종료하려면 ctrl + Z를 입력하세요)\n");
+	fgets(print, 50, stdin);
+	while(!feof(stdin)){
+		fputs(print, fq);
+		fgets(print, 50, stdin);
+	}
+	fclose(fq);
+	isequal(argv);
+}
+void isequal(char *argv[]){
+	char ch1,ch2;
+	FILE *fp,*fq;
+
+	if(fopen_s(&fp ,argv[1],"r")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	if(fopen_s(&fq ,argv[2],"r")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	while((ch1=fgetc(fp)) != EOF && (ch2=fgetc(fq))!=EOF){
+		if(ch1 != ch2){
+			break;
+		}
+	}
+	if(ch1==EOF && ch2==EOF){
+		printf("same");
+	}else{
+		printf("diff");
+	}
+	fclose(fp);
+	fclose(fq);
+}
+void ex06(int argc,char *argv[]){
+	FILE *fp;
+	char print[50];
+	if(fopen_s(&fp ,argv[1],"w")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+
+	printf("내용을 입력하세요(종료하려면 ctrl + Z를 입력하세요)\n");
+	fgets(print, 50, stdin);
+	while(!feof(stdin)){
+		fputs(print, fp);
+		fgets(print, 50, stdin);
+	}
+	fclose(fp);
+	mycopy(argv);
+}
+void mycopy(char *argv[]){
+	FILE *q,*p;
+	char ch;
+
+	if(fopen_s(&p ,argv[1],"r")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	if(fopen_s(&q ,argv[2],"w")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	while((ch=fgetc(p)) != EOF){
+		fputc(ch,q);
+	}
+	fclose(q);
+	fclose(p);
+
+}
+void ex07(){
+	FILE *fp;
+	char fname[] = "frade.txt";
+	int i,j,count,point1,point2;
+	char name[10];
+
+	if(fopen_s(&fp ,fname,"w")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	printf("몇명을 입력하시겠습니까: ");
+	scanf("%d",&count);
+	fprintf(fp,"%s%6s%6s%6s\n","번호","이름","중간","기말");
+	printf("이름과 성적(중간, 기말)을 입력하세요.\n");
+	for(i=0;i<count;i++){
+		scanf("%s%d%d",&name,&point1,&point2);
+		fscanf(fp,"%2d %s %d %d\n",i+1,name,point1,point2);
+	}
+	fclose(fp);
+}
+
+void ex08(){
+	FILE *fp,*fsum;
+	char fname[] = "frade.txt",fnames[] = "sum.txt",ch[20],name[10];
+	char *pch;
+	int num[3],count=0;
+
+	if(fopen_s(&fp ,fname,"r")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	if(fopen_s(&fsum ,fnames,"w")){
+		printf("파일이 열리지 않습니다.\n");
+		exit(1);
+	}
+	while((ch[20]=fgets(fp)) != EOF){
+		do{
+			pch = strtok(ch," ");
+			if(isdigit(*pch)){
+				num[count++]=*pch;
+			}else{
+				name=*pch;
+			}
+		}while(pch != NULL)
+		count = 0;
+		fscanf(fsum,"%2d %s %d %d %d\n",num[0],name,num[1],num[2],num[1]+num[2]);
+	}
+}
+
+void main(void)
+{
+	//ex01();
+	//ex02();
+	//ex03();
+	//ex04();
+	//ex05();
+	//ex06();
+	//ex07();
+	//ex08();
+}

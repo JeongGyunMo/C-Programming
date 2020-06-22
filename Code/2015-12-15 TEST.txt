@@ -1,0 +1,166 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct score{
+	char name[10];
+	int record;
+};
+typedef struct score score;
+
+struct sclist{
+	score *psc;
+	struct sclist *next;
+};
+typedef struct sclist sclist;
+typedef sclist *pscl;
+
+pscl put_struct(score *info);
+pscl sort_list(pscl inithedad, pscl sorthead);
+void free_list(pscl head);
+pscl add_list(pscl inithead, pscl cur);
+void print_list(pscl head);
+
+void main(int argc, char *argv[]){
+	FILE *fp;
+	score sc;
+	score *asc = &sc;
+	pscl inithead = NULL;
+	pscl sorthead = NULL;
+	pscl cur;
+	int i;
+
+	score data[5] = {
+		{ "Jhon", 30 },
+		{ "daniel", 28 },
+		{ "benjamin", 32 },
+		{ "ann", 67 },
+		{ "Kate", 77 } };
+
+		printf("\n=== file writh ===\n");
+		if( (fp = fopen(argv[1], "w")) ==NULL ){
+			printf("can't open the file.\n");
+			exit(1);
+		}
+		for(i = 0; i<5;i++){
+			fprintf(fp,"%9s%9d\n",data[i].name,data[i].record);
+			printf("%9s%9d\n",data[i].name,data[i].record);
+		}
+		fclose(fp);
+
+		printf("\n=== file read ===\n");
+		if ((fp = fopen(argv[1], "r"))==NULL){
+			printf("can't open the file.\n");
+			exit(1);
+		}
+		while(!feof(fp)){
+			fscanf(fp, "%9s%9d\n",asc->name, &asc->record);
+			printf("%9s%9d\n",asc->name, asc->record);
+
+			cur = put_struct(asc);
+			inithead = add_list(inithead, cur);
+		}
+
+		printf("\n=== before sort ===");
+		print_list(inithead);
+
+		sorthead = sort_list(inithead, sorthead);
+
+		printf("\n=== after sort ===");
+		print_list(sorthead);
+
+		printf("\n=== free list ===\n");
+		free_list(sorthead);
+
+		fclose(fp);
+		getchar();
+}
+pscl put_struct(score *info) 
+{
+	pscl cur;
+	cur=(sclist*) malloc(sizeof(sclist));
+	cur->psc = (score*)malloc(sizeof(score));
+
+	strcpy(cur->psc->name,info->name);
+	cur->psc->record = info->record;
+	cur->next = NULL;
+
+	return cur; 
+}
+
+
+
+//sort_list()
+
+pscl sort_list(pscl inithead, pscl sorthead) 
+{
+	pscl p = inithead;
+	int max = 5,i=0,j,temp;
+	int arr[5];
+	char name[5][30] = {""};
+
+	while(p != NULL){
+		arr[i] = p->psc->record;
+		i++;
+		p = p->next;
+	}
+
+	for(i = 0;i<5;i++){
+		for(j=i+1;j<5;j++){
+			if(arr[i]>arr[j]){
+				temp=arr[j];
+				arr[j] = arr[i];
+				arr[i]=arr[j];
+			}
+		}
+	}
+	p = inithead;
+	for(i=0;i<5;i++){
+	while(p != NULL){
+		if(p->psc->record == arr[max]){
+			add_list(sorthead, p);
+			max--;
+		}
+		p = p->next;
+	}
+	p = inithead;
+	}
+	return sorthead;
+}
+
+void free_list(pscl head) 
+{
+	pscl current;
+
+	while(head -> next != NULL)
+	{
+	current = head;
+	head = head -> next;
+	free(current);
+	current = NULL;
+	}
+	head = NULL;
+}
+
+pscl add_list(pscl head, pscl cur)
+{
+	pscl nxt = head;
+	if (head == NULL) {
+		head = cur;
+		return head;
+	}
+	while (nxt->next != NULL) {
+		nxt = nxt->next;
+	}
+	nxt->next = cur;
+	return head;
+}
+void print_list(pscl head)
+{
+	pscl nxt = head;
+	fprintf(stdout, "\n=== print list ===\n");
+	while (nxt != NULL) {
+		printf("%9s%9d\n", nxt->psc->name, nxt->psc->record);
+		nxt = nxt->next;
+	}
+}

@@ -1,0 +1,198 @@
+5. 프로그램 수행 중 한 줄의 문자열을 입력 받아 다음과 같이 출력하는 프로그램을 작성하시오.  
+#include <stdio.h>
+#include <string.h>
+void main(void){
+char str[50];
+char *pch;
+
+printf("문자열 입력 :");
+gets(str);
+printf("입력한 각각의 단어를 스페이스,콤마,느낌표를 기준으로 분리 ->\n");
+pch = strtok(str," ,!");
+
+while(pch != NULL){
+printf("%s\n",pch);
+pch = strtok(NULL," ,!");
+}
+
+}
+6. 프로그램 수행 중 한 줄의 문자열을 입력 받아 다음과 같이 출력하는 프로그램을 작성하시오.  
+#include <stdio.h>
+#include <string.h>
+
+void main(void){
+char str[50];
+char key[] = {" ,!"};
+char *pch;
+
+printf("문자열 입력 :");
+gets(str);
+printf("입력한 각각의 단어를 스페이스,콤마,느낌표를 기준으로 출력 ->\n");
+pch = strpbrk(str,key);
+
+while(pch != NULL){
+printf("%s\n",pch);
+pch = strpbrk(pch + 1,key);
+}
+}
+
+4. 다음 프로그램을 작성하시오.
+ 1) 명령어라인(메인함수의 매개변수)으로부터 한 줄의 문자열을 입력 받아  
+ 2) 입력 받은 모든 문자열을 일차원 문자열 배열 str에 저장한 후
+ 3) strtok()를 사용하여 일차원 배열 str의 내용을 단어로 분리하여
+ 4) 분리된 단어를 역순으로 출력하는 프로그램을 작성하시오.  
+
+#include <stdio.h>
+#include <string.h>
+
+void ex3_4(int argc, char *argv[]);
+void reverse(char *token);
+
+void main(int argc, char *argv[])
+{
+ex3_4(argc, argv);
+getchar();
+}
+void ex3_4(int argc, char *argv[])
+{
+char str[81]="";
+char *pch;
+char *delimiter = " ";
+char *pword;
+int i,j,size;
+pword = str;
+
+for(i = 1;i<argc;i++){
+size = strlen(argv[i]);
+for(j=0;j<size;j++){
+*pword++=argv[i][j];
+}
+*pword++ = ' ';
+}
+
+printf("입력 문자열\n -> %s \n", str);  
+printf("각각의 단어를 반대로 출력 \n ->");
+pch = strtok(str,delimiter);
+
+while(pch != NULL){
+reverse(pch);
+pch = strtok(NULL,delimiter);
+}
+}
+void reverse(char *token){
+int i = strlen(token);
+
+for(;i>=0;i--){
+printf("%c",token[i]);
+}
+}
+
+
+
+7. banana apple peach cherry lemon이 들어간 2차원 문자열 배열을 만들어 strcmp()와 strcpy()를 이용하여 정렬하고 출력하는 프로그램을 작성하시오.
+
+#include <stdio.h>
+#include <string.h>
+
+void main(void)
+{
+	char str[][10] ={"banana","apple","peach","cherry","lemon"};
+	int i,j,n;
+	char tmp[50]="";
+
+	printf("strcmp와 strcpy를 이용하여 정렬 ->\n");
+
+	for (i=0; i < 4; i++){
+		for (j=i+1; j < 5; j++){
+			if (strcmp(str[i],str[j])>0) {
+			strcpy(tmp, str[i]);
+			strcpy(str[i], str[j]);
+			strcpy(str[j], tmp);
+			}
+		}
+	}
+	for (n=0; n < 5; n++){
+	printf("%s\n", str[n]);
+	}
+
+}
+
+
+
+
+
+8. 명령어라인(메인함수의 매개변수)으로부터 한 줄의 문자열을 입력 받아 문자열에서 숫자만을 찾아내어 출력하는 프로그램을 작성하시오.
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+void main(int argc, char *argv[])
+{
+	int i,size;
+	size = strlen(argv[1]);
+	
+	printf("입력한 문자열에서 숫자는 ->\n");
+	for(i=0;i<size;i++){
+		if(isdigit(argv[1][i])){
+			printf("%c",argv[1][i]);
+		}
+	}
+}
+
+2. 표준입력으로 입력 받아 사칙 연산을 수행하는 프로그램을 작성하시오.
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#define CNTARGC 4
+
+void ex02(int argc, char *argv[]);
+double calc(double numa, double numb, char op); //연산자op에 해당하는 계산 수행
+
+void main(int argc, char *argv[])
+{
+   ex02(argc, argv);
+   getchar();
+}
+
+void ex02(int argc, char *argv[])
+{
+	double result;
+   double numa = atof(argv[1]);
+   double numb = atof(argv[3]);
+   char op = *argv[2];
+   result = calc(numa, numb, op);
+      printf("%lf %c %lf = %lf", numa, op, numb,result);
+
+}
+
+double calc(double numa, double numb, char op)
+{
+   double rst;
+
+   if(op == '+'){
+      rst = numa + numb;
+   }
+   else if(op == '-'){
+      rst = numa - numb;
+   }
+   else if(op == '*'){
+      rst = numa * numb;
+   }
+	else if(op == '/')
+   {      
+      if(numb == 0){
+         printf("올바르지 않은 계산입니다.");
+      rst = numa / numb;
+		}
+   }
+	else{
+      printf("연산자가 잘못 입력되었습니다.");
+   }
+   return rst;
+}
+
+
+
+

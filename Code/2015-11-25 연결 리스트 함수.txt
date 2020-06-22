@@ -1,0 +1,184 @@
+//
+// file: listlib.c
+//
+#include "linkedlist.h"
+
+//노드를 생성하는 함수
+LINK createNode(char *name)
+{
+	LINK cur;
+	cur = (NODE *) malloc(sizeof(NODE));
+	if (cur == NULL) {
+		 printf("노드 생성을 위한 메모리 할당에 문제가 있습니다.\n");
+		return NULL;
+	}
+	//언어 이름을 저장할 문자 배열을 동적 할당하여 name에 저장 
+	cur->name = (char *) malloc( sizeof(char) * (strlen(name)+1) );
+	strcpy(cur->name, name);
+	cur->next = NULL;
+	return cur;
+}
+
+//노드를 추가하는 함수
+LINK append(LINK head, LINK cur) 
+{
+	LINK nextNode = head;
+	if (head == NULL) {
+		head = cur;
+		return head;
+	} 
+	while (nextNode->next != NULL) {
+	nextNode = nextNode->next;
+	}
+	nextNode->next = cur; 
+	return head;
+}
+
+//번호를 입력 받으면, 그 번호번째에 노드를 추가하는 함수
+LINK insert(LINK head, LINK cur, int posi) 
+{
+	LINK nextNode = head;
+	LINK nextNode = (LINK)malloc(sizeof(LINK)); 
+
+	if(head == NULL)
+	{	
+		nextNode->next = NULL;
+		head = nextNode;
+	}
+	else if(cur == NULL)
+	{
+		nextNode->next = head->next;
+		head->next = nextNode;
+	}
+	else
+		cur->next = nextNode;
+		nextNode->next = cur->next;
+	
+}
+
+// 리스트의 마지막 노드를 삭제하는 함수
+LINK deletelast(LINK head) 
+{
+	LINK pre;
+	LINK nextNode = head;
+	if (head == NULL) {
+		printf("비어있습니다.");
+		return head;
+	}
+	while(nextNode -> next != NULL)
+	{
+		pre = nextNode;
+		nextNode = nextNode->next;
+	}
+	pre -> next = NULL;
+	return nextNode;
+}
+
+
+//리스트 전체 메모리 해제
+LINK freelist(LINK head) 
+{
+	LINK current;
+
+	while(head -> next != NULL)
+	{
+	current = head;
+	head = head -> next;
+	free(current);
+	current = NULL;
+	}
+	head = NULL;
+	return head;
+}
+
+
+//연결 리스트의 모든 노드 출력 함수
+int printList(LINK head) 
+{
+	int cnt = 0;
+	LINK nextNode = head;
+
+	while (nextNode != NULL) {
+	printf("%3d번째 노드는 %s\n", ++cnt, nextNode->name);
+	nextNode = nextNode->next;	 
+	}
+	return cnt;
+}
+
+
+//
+// file: linkedlist.c
+//
+#include "linkedlist.h"
+
+LINK createNode(char *name);
+LINK append(LINK head, LINK cur);
+LINK insert(LINK head, LINK cur, int posi);
+LINK deletelast(LINK head);
+LINK freelist(LINK head);
+int printList(LINK head);
+
+void main(void) 
+{
+	char name[30];
+	LINK head = NULL;
+	LINK cur;
+	char ch;
+	int posi;
+
+	while(1)
+	{
+		printf("a<끝노드추가>, b<끝노드추가>, c<중간노드추가>, d<전체메모리해체>, 그외<종료>");
+		printf(">>선택 : ");
+		scanf("%c", &ch);
+		fflush(stdin);
+
+		if(ch == 'a'){
+			printf("이름 입력 후 Enter : \n");
+			gets_s(name, 30);
+		
+			cur = createNode(name); //노드 동적 할당
+			if (cur == NULL) exit(1);	
+
+			head = append(head, cur); //맨 뒤에 노드 추가
+			printList(head);	//연결 리스트 모두 출력
+		}
+		else if(ch == 'b'){
+			head = deletelast(head); //맨 뒤에 노드 추가
+			printList(head);	//연결 리스트 모두 출력
+		}
+		else if(ch == 'c'){
+			printf("이름 입력 후 Enter : \n");
+			gets_s(name, 30);
+
+			printf("위치 입력 후 Enter : \n");
+			scanf("%d", &posi);
+
+			cur = insert(head, cur, posi);
+			if (cur == NULL) exit(1);	
+			printList(head);
+		}
+		else if(ch == 'd'){
+			freelist(head);
+		}
+		else
+			exit(1);
+	}
+}
+
+
+//
+// file: linkedlist.h
+//
+#include <stdio.h> 
+#include <stdlib.h>
+#include <string.h>
+
+struct linked_list {
+char *name;
+struct linked_list *next;
+};
+typedef struct linked_list NODE;
+typedef NODE * LINK;
+
+
